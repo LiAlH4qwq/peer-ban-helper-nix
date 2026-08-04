@@ -27,7 +27,7 @@
           };
 
         perSystem = { pkgs, ... }: {
-          packages.peer-ban-helper-bin = import ./packages/peer-ban-helper-bin { inherit lib pkgs; };
+          packages.peer-ban-helper-bin = pkgs.callPackage ./packages/peer-ban-helper-bin { };
         };
       }
     );

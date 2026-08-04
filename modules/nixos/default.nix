@@ -16,7 +16,9 @@
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = self.packages.${pkgs.stdenv.system}.peer-ban-helper-bin;
+      # It results in a `no such attribution` error.
+      # default = self.packages.${pkgs.stdenv.system}.peer-ban-helper-bin;
+      default = pkgs.callPackage ../../packages/peer-ban-helper-bin { };
       defaultText = lib.literalMD "`self.packages.\${pkgs.stdenv.system}.peer-ban-helper-bin`";
       description = "Package of Peer Ban Helper";
     };
