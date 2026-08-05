@@ -1,8 +1,8 @@
+localFlake:
 {
   config,
   lib,
   pkgs,
-  self,
   ...
 }:
 {
@@ -16,11 +16,11 @@
 
     package = lib.mkOption {
       type = lib.types.package;
-      # It results in a `no such attribution` error.
-      # default = self.packages.${pkgs.stdenv.system}.peer-ban-helper-bin;
-      default = pkgs.callPackage ../../packages/peer-ban-helper-bin { };
+      default = localFlake.withSystem pkgs.stdenv.system (
+        { config, ... }: config.packages.peer-ban-helper-bin
+      );
       defaultText = lib.literalMD "`self.packages.\${pkgs.stdenv.system}.peer-ban-helper-bin`";
-      description = "Package of Peer Ban Helper";
+      description = "Package of Peer Ban Helper.";
     };
 
     dataDir = lib.mkOption {
@@ -32,13 +32,13 @@
     user = lib.mkOption {
       type = lib.types.str;
       default = "peer-ban-helper";
-      description = "User of Peer Ban Helper";
+      description = "User of Peer Ban Helper.";
     };
 
     group = lib.mkOption {
       type = lib.types.str;
       default = "peer-ban-helper";
-      description = "Group of Peer Ban Helper";
+      description = "Group of Peer Ban Helper.";
     };
   };
 
@@ -48,11 +48,14 @@
     in
     lib.mkIf cfg.enable {
       systemd = {
-        services.peer-ban-helper.serviceConfig = {
-          User = cfg.user;
-          Group = cfg.group;
-          WorkingDirectory = cfg.dataDir;
-          ExecStart = "${cfg.package}/bin/peer-ban-helper";
+        services.peer-ban-helper = {
+          wantedBy = [ "multi-user.target" ];
+          serviceConfig = {
+            User = cfg.user;
+            Group = cfg.group;
+            WorkingDirectory = cfg.dataDir;
+            ExecStart = "${cfg.package}/bin/peer-ban-helper";
+          };
         };
 
         tmpfiles.settings.peer-ban-helper.${cfg.dataDir}.d = {

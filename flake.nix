@@ -11,14 +11,19 @@
   outputs =
     inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } (
-      { lib, self, ... }:
+      {
+        flake-parts-lib,
+        self,
+        withSystem,
+        ...
+      }:
       {
         systems = import inputs.systems;
 
         flake.nixosModules =
           let
             peer-ban-helper = {
-              imports = [ "${self}/modules/nixos" ];
+              imports = [ (flake-parts-lib.importApply "${self}/modules/nixos" { inherit withSystem; }) ];
             };
           in
           {
@@ -27,7 +32,14 @@
           };
 
         perSystem = { pkgs, ... }: {
-          packages.peer-ban-helper-bin = pkgs.callPackage ./packages/peer-ban-helper-bin { };
+          packages =
+            let
+              peer-ban-helper-bin = pkgs.callPackage ./packages/peer-ban-helper-bin { };
+            in
+            {
+              inherit peer-ban-helper-bin;
+              default = peer-ban-helper-bin;
+            };
         };
       }
     );
