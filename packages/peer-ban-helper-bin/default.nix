@@ -1,11 +1,11 @@
 { lib, pkgs }:
 pkgs.stdenv.mkDerivation (finalAttrs: {
   pname = "peer-ban-helper";
-  version = "9.4.2";
+  version = "9.4.3";
 
   src = pkgs.fetchzip {
-    url = "https://github.com/PBH-BTN/PeerBanHelper/releases/download/v9.4.2/PeerBanHelper_9.4.2.zip";
-    hash = "sha256-b/Uz/NIVyIZmwDMc29AUOu6OqkoS0wu8sRJscZAjWpw=";
+    url = "https://github.com/PBH-BTN/PeerBanHelper/releases/download/v9.4.3/PeerBanHelper_9.4.3.zip";
+    hash = "sha256-H1DrR8c3hAslh/W1lVnXLLJcbmrtM/m2ByTuS2vpWfE=";
   };
 
   nativeBuildInputs = [ pkgs.makeWrapper ];
