@@ -26,6 +26,10 @@ jobs:
           extra-conf: |
             accept-flake-config = true
 
+      - name: Fix Nix setting dir
+        run: |
+          mkdir -p ~/.config/nix
+          
       - name: Setup Cachix
         uses: cachix/cachix-action@v17
         with:
