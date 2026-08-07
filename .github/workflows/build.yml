@@ -26,6 +26,12 @@ jobs:
           extra-conf: |
             accept-flake-config = true
 
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v17
+        with:
+          name: lialh4
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+
       - name: Build package
         run: |
           nix build .#peer-ban-helper-bin
